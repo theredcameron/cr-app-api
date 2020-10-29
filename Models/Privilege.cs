@@ -1,12 +1,11 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models {
-    public class Medicine {
-        [Column("MedicineId")]
+    public class Privilege {
+        [Column("PrivilegeId")]
         [Key]
         [JsonPropertyName("Id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,15 +13,11 @@ namespace api.Models {
 
         [Required]
         [JsonPropertyName("Name")]
-        [MaxLength(500)]
+        [MaxLength(100)]
         public string Name {get;set;}
 
-        [Required]
-        [JsonPropertyName("CurrentQuantity")]
-        public int CurrentQuantity {get;set;}
-        
-        [ForeignKey("MedicineId")]
-        [JsonPropertyName("Ledger")]
-        public List<Ledger> Ledger {get;set;}
+        [JsonPropertyName("Description")]
+        [MaxLength(500)]
+        public string Description {get;set;}
     }
 }
