@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using api.Services;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MedicineController : ControllerBase
     {
         private static MedicineService _medicineService;
@@ -24,10 +25,31 @@ namespace api.Controllers
             _medicineService = new MedicineService();
         }
 
+        // GET: api/Medicine
         [HttpGet]
-        public IEnumerable<Medicine> Get()
+        public ActionResult Get()
         {
-            return _medicineService.GetMedicines();
+            try 
+            {
+                return Ok(_medicineService.GetMedicines());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET: api/Medicine/5
+        [HttpGet("{id}")]
+        public ActionResult GetWithId(long id) {
+            try 
+            {
+                return Ok(_medicineService.GetMedicineById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
