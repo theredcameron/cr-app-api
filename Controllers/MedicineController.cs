@@ -55,6 +55,12 @@ namespace api.Controllers
         [HttpPost]
         public ActionResult PostMedicine(Medicine medicine) {
             try{
+                if(medicine.Id > 0) {
+                    _context.Update(medicine);
+                } else {
+                    _context.Add(medicine);
+                }
+                _context.SaveChanges();
                 return Ok();
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -65,7 +71,9 @@ namespace api.Controllers
         [HttpDelete]
         public ActionResult DeleteMedicine(Medicine medicine) {
             try {
-                return Ok(_context.Medicines.Remove(medicine));
+                _context.Medicines.Remove(medicine);
+                _context.SaveChanges();
+                return Ok();
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }

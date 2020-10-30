@@ -22,7 +22,7 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<MedicineDbContext>(o => o.UseSqlite(Configuration.GetConnectionString("MainConnection")));
+            services.AddDbContext<MedicineDbContext>(o => o.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
