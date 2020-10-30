@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using api.Models;
-using api.Services;
+using api.Contexts;
 
 namespace api.Controllers
 {
@@ -15,14 +15,13 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class MedicineController : ControllerBase
     {
-        private static MedicineService _medicineService;
-
         private readonly ILogger<MedicineController> _logger;
+        private readonly MedicineDbContext _context;
 
-        public MedicineController(ILogger<MedicineController> logger)
+        public MedicineController(MedicineDbContext context, ILogger<MedicineController> logger)
         {
             _logger = logger;
-            _medicineService = new MedicineService();
+            _context = context;
         }
 
         // GET: api/Medicine
@@ -31,7 +30,7 @@ namespace api.Controllers
         {
             try 
             {
-                return Ok(_medicineService.GetMedicines());
+                return Ok(_context.Medicines);
             }
             catch (Exception ex)
             {
@@ -44,10 +43,30 @@ namespace api.Controllers
         public ActionResult GetWithId(long id) {
             try 
             {
-                return Ok(_medicineService.GetMedicineById(id));
+                return Ok(_context.Medicines.Find(id));
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST: api/Medicine
+        [HttpPost]
+        public ActionResult PostMedicine(Medicine medicine) {
+            try{
+                return Ok();
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            } 
+        }
+
+        // DELETE: api/Medicine
+        [HttpDelete]
+        public ActionResult DeleteMedicine(Medicine medicine) {
+            try {
+                return Ok(_context.Medicines.Remove(medicine));
+            } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
         }
