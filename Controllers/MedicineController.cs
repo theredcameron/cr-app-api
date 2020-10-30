@@ -53,7 +53,7 @@ namespace api.Controllers
 
         // POST: api/Medicine
         [HttpPost]
-        public ActionResult PostMedicine(Medicine medicine) {
+        public ActionResult AlterMedicine(Medicine medicine) {
             try{
                 if(medicine.Id > 0) {
                     _context.Update(medicine);
