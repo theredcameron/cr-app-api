@@ -44,9 +44,9 @@ namespace api.Controllers
             }
         }
 
-        // GET: api/Ledger?medicineId=5
+        // GET: api/Ledger/Medicine/5
         [HttpGet]
-        [Route("api/[controller]?medicineId={medId}")]
+        [Route("api/[controller]/Medicine/{medId}")]
         public ActionResult GetLedgersByMedicineId(long medId) {
             try {
                 return Ok(_context.Ledgers.Select(x => x.MedicineId == medId));
@@ -57,7 +57,7 @@ namespace api.Controllers
 
         // POST: api/Ledger
         [HttpPost]
-        public ActionResult AlterLedger(Ledger ledger) {
+        public ActionResult AlterLedger([FromBody]Ledger ledger) {
             try {
                 if(ledger.Id > 0){
                     _context.Ledgers.Update(ledger);
@@ -73,7 +73,7 @@ namespace api.Controllers
 
         // DELETE: api/Ledger
         [HttpDelete]
-        public ActionResult DeleteLedger(Ledger ledger) {
+        public ActionResult DeleteLedger([FromBody]Ledger ledger) {
             try {
                 _context.Ledgers.Remove(ledger);
                 _context.SaveChanges();

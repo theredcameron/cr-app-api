@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
 using api.Models;
@@ -21,6 +22,7 @@ namespace api.Controllers
         }
 
         // GET: api/Medicine
+        [Authorize]
         [HttpGet]
         public ActionResult Get()
         {
@@ -49,7 +51,7 @@ namespace api.Controllers
 
         // POST: api/Medicine
         [HttpPost]
-        public ActionResult AlterMedicine(Medicine medicine) {
+        public ActionResult AlterMedicine([FromBody]Medicine medicine) {
             try{
                 if(medicine.Id > 0) {
                     _context.Update(medicine);
@@ -65,7 +67,7 @@ namespace api.Controllers
 
         // DELETE: api/Medicine
         [HttpDelete]
-        public ActionResult DeleteMedicine(Medicine medicine) {
+        public ActionResult DeleteMedicine([FromBody]Medicine medicine) {
             try {
                 _context.Medicines.Remove(medicine);
                 _context.SaveChanges();
