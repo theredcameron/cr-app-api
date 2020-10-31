@@ -10,10 +10,12 @@ namespace api.Contexts {
         public MedicineDbContext(DbContextOptions<MedicineDbContext> options) : base(options){}
         public DbSet<Medicine> Medicines {get;set;}
         public DbSet<Ledger> Ledgers {get;set;}
+        public DbSet<User> Users {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Medicine>().ToTable("Medicine");
             modelBuilder.Entity<Ledger>().ToTable("Ledger");
+            modelBuilder.Entity<User>().ToTable("User");
         }
     }
 }
