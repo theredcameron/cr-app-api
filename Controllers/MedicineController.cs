@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,25 @@ namespace api.Controllers
         {
             _logger = logger;
             _context = context;
+
+            //Add test user
+            var users = _context.Users.Select(x => x.UserName == "testuser");
+            if(users.Count() <= 0) {
+                _context.Users.Add(new User{
+                    UserName = "testuser",
+                    Password = "12345",
+                    FirstName = "test",
+                    LastName = "user",
+                    CreatedDate = DateTime.Now
+                });
+
+                _context.SaveChanges();
+            }
+            
         }
 
         // GET: api/Medicine
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public ActionResult Get()
         {

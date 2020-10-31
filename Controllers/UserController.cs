@@ -18,11 +18,11 @@ namespace api.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase {
-        private readonly ILogger<MedicineController> _logger;
+        private readonly ILogger<UserController> _logger;
         private readonly IOptions<ConfigContract> _config;
         private readonly MedicineDbContext _context;
 
-        public UserController(MedicineDbContext context, ILogger<MedicineController> logger, IOptions<ConfigContract> config)
+        public UserController(MedicineDbContext context, ILogger<UserController> logger, IOptions<ConfigContract> config)
         {
             _logger = logger;
             _context = context;
@@ -32,6 +32,7 @@ namespace api.Controllers {
         [HttpPost]
         [Route("api/[controller]/Login")]
         public ActionResult Login([FromBody]UserContract userContract) {
+            _logger.LogInformation("called");
             try {
                 var user = _context.Users.Single(x => x.UserName == userContract.UserName);
 
@@ -58,7 +59,7 @@ namespace api.Controllers {
                             
                 var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
 
-                return Ok(jwt_token);
+                return Ok(new {token = jwt_token} );
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
