@@ -8,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 using api.Models;
@@ -154,7 +153,11 @@ namespace api.Controllers {
         [Route("api/User/{id}")]
         public ActionResult DeleteUser(long id) {
             try {
-                _context.Users.Remove(_context.Users.Find(id));
+                var user = _context.Users.Find(id);
+                if(user == null) {
+                    return NotFound();
+                }
+                _context.Users.Remove(user);
                 _context.SaveChanges();
                 return Ok();
             } catch (Exception ex) {

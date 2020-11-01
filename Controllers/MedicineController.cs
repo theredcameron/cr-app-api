@@ -44,7 +44,11 @@ namespace api.Controllers
         public ActionResult GetWithId(long id) {
             try 
             {
-                return Ok(_context.Medicines.Find(id));
+                var medicine = _context.Medicines.Find(id);
+                if(medicine == null) {
+                    return NotFound();
+                }
+                return Ok(medicine);
             }
             catch (Exception ex)
             {
@@ -70,12 +74,16 @@ namespace api.Controllers
             } 
         }
 
-        // DELETE: api/Medicine
+        // DELETE: api/Medicine/{id}
         [Authorize]
         [HttpDelete]
-        [Route("api/Medicine")]
-        public ActionResult DeleteMedicine([FromBody]Medicine medicine) {
+        [Route("api/Medicine/{id}")]
+        public ActionResult DeleteMedicine(long id) {
             try {
+                var medicine = _context.Medicines.Find(id);
+                if(medicine == null) {
+                    return NotFound();
+                }
                 _context.Medicines.Remove(medicine);
                 _context.SaveChanges();
                 return Ok();

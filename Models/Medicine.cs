@@ -8,7 +8,7 @@ namespace api.Models {
     public class Medicine {
         [Column("MedicineId")]
         [Key]
-        [JsonPropertyName("MedicineId")]
+        [JsonPropertyName("Id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id {get;set;}
 
@@ -16,6 +16,10 @@ namespace api.Models {
         [JsonPropertyName("Name")]
         [MaxLength(500)]
         public string Name {get;set;}
+
+        [Required]
+        [JsonPropertyName("CurrentQuantity")]
+        public int CurrentQuantity {get;set;}
         
         [ForeignKey("MedicineId")]
         [JsonPropertyName("Ledger")]

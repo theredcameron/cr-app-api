@@ -42,7 +42,11 @@ namespace api.Controllers
         [Route("api/Ledger/{id}")]
         public ActionResult GetLedgerById(long id) {
             try {
-                return Ok(_context.Ledgers.Find(id));
+                var ledger = _context.Ledgers.Find(id);
+                if(ledger == null) {
+                    return NotFound();
+                }
+                return Ok(ledger);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -82,8 +86,12 @@ namespace api.Controllers
         [Authorize]
         [HttpDelete]
         [Route("api/Ledger")]
-        public ActionResult DeleteLedger([FromBody]Ledger ledger) {
+        public ActionResult DeleteLedger(long id) {
             try {
+                var ledger = _context.Ledgers.Find(id);
+                if(ledger == null) {
+                    return NotFound();
+                }
                 _context.Ledgers.Remove(ledger);
                 _context.SaveChanges();
                 return Ok();
