@@ -24,5 +24,8 @@ namespace api.Models {
         [Required]
         [JsonPropertyName("SavedDate")]
         public DateTime SavedDate {get;set;}
+
+        [JsonPropertyName("Note")]
+        public string Note {get;set;}
     }
 }

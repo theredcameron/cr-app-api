@@ -108,7 +108,9 @@ namespace api.Controllers {
         [Route("api/User/{id}")]
         public ActionResult GetUserById(long id) {
             try {
-                var user = _context.Users.Find(id);
+                var user = (from users in _context.Users
+                            where users.UserId == id
+                            select users).FirstOrDefault();
                 if(user == null) {
                     return NotFound();
                 }
@@ -153,7 +155,9 @@ namespace api.Controllers {
         [Route("api/User/{id}")]
         public ActionResult DeleteUser(long id) {
             try {
-                var user = _context.Users.Find(id);
+                var user = (from users in _context.Users
+                            where users.UserId == id
+                            select users).FirstOrDefault();
                 if(user == null) {
                     return NotFound();
                 }

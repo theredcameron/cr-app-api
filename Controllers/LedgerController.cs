@@ -30,7 +30,7 @@ namespace api.Controllers
         [Route("api/Ledger")]
         public ActionResult GetLedgers() {
             try {
-                return Ok(_context.Ledgers);
+                return Ok(from ledgers in _context.Ledgers select ledgers);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -42,7 +42,9 @@ namespace api.Controllers
         [Route("api/Ledger/{id}")]
         public ActionResult GetLedgerById(long id) {
             try {
-                var ledger = _context.Ledgers.Find(id);
+                var ledger = (from ledgers in _context.Ledgers
+                                where ledgers.Id == id
+                                select ledgers).FirstOrDefault();
                 if(ledger == null) {
                     return NotFound();
                 }
@@ -58,7 +60,9 @@ namespace api.Controllers
         [Route("api/Ledger/Medicine/{medId}")]
         public ActionResult GetLedgersByMedicineId(long medId) {
             try {
-                return Ok(_context.Ledgers.Select(x => x.MedicineId == medId));
+                return Ok(from ledgers in _context.Ledgers
+                            where ledgers.MedicineId == medId
+                            select ledgers);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -88,7 +92,9 @@ namespace api.Controllers
         [Route("api/Ledger")]
         public ActionResult DeleteLedger(long id) {
             try {
-                var ledger = _context.Ledgers.Find(id);
+                var ledger = (from ledgers in _context.Ledgers
+                                where ledgers.Id == id
+                                select ledgers).FirstOrDefault();
                 if(ledger == null) {
                     return NotFound();
                 }

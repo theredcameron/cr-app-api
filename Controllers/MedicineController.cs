@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 using api.Models;
 using api.Contexts;
+using api.Contracts;
 
 namespace api.Controllers
 {
@@ -29,7 +30,7 @@ namespace api.Controllers
         {
             try 
             {
-                return Ok(_context.Medicines);
+                return Ok(from medicines in _context.Medicines select medicines);
             }
             catch (Exception ex)
             {
@@ -44,7 +45,9 @@ namespace api.Controllers
         public ActionResult GetWithId(long id) {
             try 
             {
-                var medicine = _context.Medicines.Find(id);
+                var medicine = (from medicines in _context.Medicines
+                                where medicines.Id == id
+                                select medicines).FirstOrDefault();
                 if(medicine == null) {
                     return NotFound();
                 }
@@ -60,18 +63,65 @@ namespace api.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/Medicine")]
-        public ActionResult AlterMedicine([FromBody]Medicine medicine) {
+        public ActionResult AlterMedicine([FromBody]MedicineContract medicine) {
             try{
                 if(medicine.Id > 0) {
-                    _context.Update(medicine);
+                    UpdateMedicine(medicine);
                 } else {
-                    _context.Add(medicine);
+                    AddMedicine(medicine);
                 }
                 _context.SaveChanges();
-                return Ok();
+                return Ok(medicine);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             } 
+        }
+
+        private Medicine AddMedicine(MedicineContract medContract) {
+            var medicine = new Medicine{
+                Id = 0,
+                Name = medContract.Name,
+                CurrentQuantity = medContract.CurrentQuantity
+            };
+            _context.Medicines.Add(medicine);
+            return medicine;
+        }
+
+        private Medicine UpdateMedicine(MedicineContract medContract) {
+            var medicine = _context.Medicines.Find(medContract.Id);
+            medicine.Name = medContract.Name;
+            medicine.CurrentQuantity = medContract.CurrentQuantity;
+            return medicine;
+        }
+
+        // POST: api/Medicine/Prescription
+        [Authorize]
+        [HttpPost]
+        [Route("api/Medicine/Prescription")]
+        public ActionResult AddPrescription([FromBody]PrescriptionContract prescription) {
+            try {
+                var ledger = new Ledger{
+                    Id = 0,
+                    MedicineId = prescription.MedicineId,
+                    Quantity = prescription.Quantity,
+                    SavedDate = DateTime.Now,
+                    Note = prescription.Note
+                };
+
+                var medicine = (from medicines in _context.Medicines 
+                                where medicines.Id == prescription.MedicineId 
+                                select medicines).FirstOrDefault();
+                if(medicine == null) {
+                    return BadRequest("Medicine cannot be found");
+                }
+                medicine.CurrentQuantity += prescription.Quantity;
+                _context.Ledgers.Add(ledger);
+                _context.SaveChanges();
+                
+                return Ok();
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Medicine/{id}
@@ -84,6 +134,9 @@ namespace api.Controllers
                 if(medicine == null) {
                     return NotFound();
                 }
+                _context.Ledgers.RemoveRange(from ledgers in _context.Ledgers 
+                                            where ledgers.MedicineId == id 
+                                            select ledgers);
                 _context.Medicines.Remove(medicine);
                 _context.SaveChanges();
                 return Ok();
