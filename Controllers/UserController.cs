@@ -16,7 +16,6 @@ using api.Contracts;
 
 namespace api.Controllers {
     [ApiController]
-    [Route("api/[controller]")]
     public class UserController : ControllerBase {
         private readonly ILogger<UserController> _logger;
         private readonly IOptions<ConfigContract> _config;
@@ -30,14 +29,13 @@ namespace api.Controllers {
         }
 
         [HttpPost]
-        [Route("api/[controller]/Login")]
+        [Route("api/User/Login")]
         public ActionResult Login([FromBody]UserContract userContract) {
-            _logger.LogInformation("called");
             try {
                 var user = _context.Users.Single(x => x.UserName == userContract.UserName);
 
-                if(user == null || user.Password == userContract.Password) {
-                    throw new Exception("Invalid Credentials");
+                if(user == null || user.Password != userContract.Password) {
+                    return BadRequest("Invalid Credentials");
                 }
 
                 var key = _config.Value.Key;
@@ -54,7 +52,7 @@ namespace api.Controllers {
                 var token = new JwtSecurityToken(issuer,
                                 issuer,
                                 claims,
-                                expires: DateTime.Now.AddMinutes(5),
+                                expires: DateTime.Now.AddHours(12),
                                 signingCredentials: credentials);
                             
                 var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);

@@ -12,7 +12,6 @@ using api.Contexts;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class LedgerController : ControllerBase
     {
         private readonly ILogger<LedgerController> _logger;
@@ -26,6 +25,7 @@ namespace api.Controllers
 
         // GET: api/Ledger
         [HttpGet]
+        [Route("api/Ledger")]
         public ActionResult GetLedgers() {
             try {
                 return Ok(_context.Ledgers);
@@ -36,6 +36,7 @@ namespace api.Controllers
 
         // GET: api/Ledger/5
         [HttpGet]
+        [Route("api/Ledger/{id}")]
         public ActionResult GetLedgerById(long id) {
             try {
                 return Ok(_context.Ledgers.Find(id));
@@ -46,7 +47,7 @@ namespace api.Controllers
 
         // GET: api/Ledger/Medicine/5
         [HttpGet]
-        [Route("api/[controller]/Medicine/{medId}")]
+        [Route("api/Ledger/Medicine/{medId}")]
         public ActionResult GetLedgersByMedicineId(long medId) {
             try {
                 return Ok(_context.Ledgers.Select(x => x.MedicineId == medId));
@@ -57,6 +58,7 @@ namespace api.Controllers
 
         // POST: api/Ledger
         [HttpPost]
+        [Route("api/Ledger")]
         public ActionResult AlterLedger([FromBody]Ledger ledger) {
             try {
                 if(ledger.Id > 0){
@@ -73,6 +75,7 @@ namespace api.Controllers
 
         // DELETE: api/Ledger
         [HttpDelete]
+        [Route("api/Ledger")]
         public ActionResult DeleteLedger([FromBody]Ledger ledger) {
             try {
                 _context.Ledgers.Remove(ledger);

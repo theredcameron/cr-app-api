@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +37,7 @@ namespace api
         private void SetupJWTServices(IServiceCollection services) {
             var key = Configuration["Auth:Key"];
             var issuer = Configuration["Auth:Issuer"];
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters{
                     ValidateIssuer = true,
@@ -44,6 +45,7 @@ namespace api
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = issuer,
                     ValidAudience = issuer,
+                    ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                 };
 
@@ -56,7 +58,6 @@ namespace api
                     }
                 };
             });
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,8 +74,8 @@ namespace api
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

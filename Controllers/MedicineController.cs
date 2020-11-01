@@ -10,7 +10,6 @@ using api.Contexts;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class MedicineController : ControllerBase
     {
         private readonly ILogger<MedicineController> _logger;
@@ -38,8 +37,9 @@ namespace api.Controllers
         }
 
         // GET: api/Medicine
-        //[Authorize]
+        [Authorize]
         [HttpGet]
+        [Route("api/Medicine")]
         public ActionResult Get()
         {
             try 
@@ -53,7 +53,8 @@ namespace api.Controllers
         }
 
         // GET: api/Medicine/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("api/Medicine/{id}")]
         public ActionResult GetWithId(long id) {
             try 
             {
@@ -67,6 +68,7 @@ namespace api.Controllers
 
         // POST: api/Medicine
         [HttpPost]
+        [Route("api/Medicine")]
         public ActionResult AlterMedicine([FromBody]Medicine medicine) {
             try{
                 if(medicine.Id > 0) {
@@ -83,6 +85,7 @@ namespace api.Controllers
 
         // DELETE: api/Medicine
         [HttpDelete]
+        [Route("api/Medicine")]
         public ActionResult DeleteMedicine([FromBody]Medicine medicine) {
             try {
                 _context.Medicines.Remove(medicine);
