@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "e6ae0492-92d4-4583-b41b-d93b66efab90",
+		"name": "CR API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7dab886-fc87-42de-8de6-2f5f3b51d901",
+						"exec": [
+							"let responseData = pm.response.json();",
+							"pm.collectionVariables.set(\"token\", responseData.token);",
+							"",
+							"pm.test(\"Response code is 200\", function() {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/User/Login",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"User",
+						"Login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "299f8504-40f9-489e-a9ea-6a7d1bd7ddc9",
+						"exec": [
+							"let user = pm.response.json();",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"User should match the user in the database\", function() {",
+							"    pm.expect(user.userName).to.equal(\"postmanuser\");",
+							"    pm.expect(user.password).to.equal(\"54321\");",
+							"    pm.expect(user.firstName).to.equal(\"Postman\");",
+							"    pm.expect(user.lastName).to.equal(\"User\");",
+							"    pm.expect(user.active).to.equal(true);",
+							"});",
+							"",
+							"pm.collectionVariables.set(\"newUserId\", user.userId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"UserId\": 0,\n    \"UserName\": \"postmanuser\",\n    \"Password\": \"54321\",\n    \"FirstName\": \"Postman\",\n    \"LastName\": \"User\",\n    \"Active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/User",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5894cf5-2e47-4b2a-9afe-ccce9305052c",
+						"exec": [
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"There are only two users\", function() {",
+							"    let user = pm.response.json();",
+							"    pm.expect(user.length).is.equal(2);",
+							"    ",
+							"    pm.collectionVariables.set(\"newUserId\", user[1].userId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/User",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get New User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "468c4fad-0f44-4576-a449-eeb3fc713bd8",
+						"exec": [
+							"let user = pm.response.json();",
+							"let newUserId = pm.collectionVariables.get(\"newUserId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"User should match the user in the database\", function() {",
+							"    console.log(user);",
+							"    pm.expect(user.userId).to.equal(newUserId);",
+							"    pm.expect(user.userName).to.equal(\"postmanuser\");",
+							"    pm.expect(user.password).to.equal(\"54321\");",
+							"    pm.expect(user.firstName).to.equal(\"Postman\");",
+							"    pm.expect(user.lastName).to.equal(\"User\");",
+							"    pm.expect(user.active).to.equal(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/User/{{newUserId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User",
+						"{{newUserId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "27e57cc7-8d53-4583-8dce-11d53e131192",
+						"exec": [
+							"let user = pm.response.json();",
+							"let newUserId = pm.collectionVariables.get(\"newUserId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"User should match the user in the database\", function() {",
+							"    pm.expect(user.userId).to.equal(newUserId);",
+							"    pm.expect(user.userName).to.equal(\"postmanuserchange\");",
+							"    pm.expect(user.password).to.equal(\"543210\");",
+							"    pm.expect(user.firstName).to.equal(\"Postman Change\");",
+							"    pm.expect(user.lastName).to.equal(\"User Change\");",
+							"    pm.expect(user.active).to.equal(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"UserId\": {{newUserId}},\n    \"UserName\": \"postmanuserchange\",\n    \"Password\": \"543210\",\n    \"FirstName\": \"Postman Change\",\n    \"LastName\": \"User Change\",\n    \"Active\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/User",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check User Changes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb1195b4-dfe0-45b5-8eb4-1e01d499d340",
+						"exec": [
+							"let user = pm.response.json();",
+							"let newUserId = pm.collectionVariables.get(\"newUserId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"User should match the user in the database\", function() {",
+							"    pm.expect(user.userId).to.equal(newUserId);",
+							"    pm.expect(user.userName).to.equal(\"postmanuserchange\");",
+							"    pm.expect(user.password).to.equal(\"543210\");",
+							"    pm.expect(user.firstName).to.equal(\"Postman Change\");",
+							"    pm.expect(user.lastName).to.equal(\"User Change\");",
+							"    pm.expect(user.active).to.equal(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/User/{{newUserId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User",
+						"{{newUserId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dfb1657a-88ab-44ef-a171-16cf43af62b2",
+						"exec": [
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/User/{{newUserId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User",
+						"{{newUserId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm User Deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e03e92b0-9b84-4c0e-90d2-7951cad01598",
+						"exec": [
+							"pm.test(\"Response code should be 404\", function() {",
+							"    pm.expect(pm.response.code).is.equal(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/User/{{newUserId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User",
+						"{{newUserId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b5909b63-6eb9-464c-8f38-7c9a3cbe5bd2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f00bd2f7-aae3-4f75-af8d-ad2b1591bda2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "169d5d1f-b572-4952-84ec-647b932ed747",
+			"key": "token",
+			"value": ""
+		},
+		{
+			"id": "8f5ef1b6-4193-4847-891c-04a03c71ebdd",
+			"key": "newUserId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

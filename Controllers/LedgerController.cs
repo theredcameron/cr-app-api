@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
 using api.Models;
@@ -25,6 +26,7 @@ namespace api.Controllers
 
         // GET: api/Ledger
         [HttpGet]
+        [Authorize]
         [Route("api/Ledger")]
         public ActionResult GetLedgers() {
             try {
@@ -35,6 +37,7 @@ namespace api.Controllers
         }
 
         // GET: api/Ledger/5
+        [Authorize]
         [HttpGet]
         [Route("api/Ledger/{id}")]
         public ActionResult GetLedgerById(long id) {
@@ -46,6 +49,7 @@ namespace api.Controllers
         }
 
         // GET: api/Ledger/Medicine/5
+        [Authorize]
         [HttpGet]
         [Route("api/Ledger/Medicine/{medId}")]
         public ActionResult GetLedgersByMedicineId(long medId) {
@@ -57,6 +61,7 @@ namespace api.Controllers
         }
 
         // POST: api/Ledger
+        [Authorize]
         [HttpPost]
         [Route("api/Ledger")]
         public ActionResult AlterLedger([FromBody]Ledger ledger) {
@@ -74,6 +79,7 @@ namespace api.Controllers
         }
 
         // DELETE: api/Ledger
+        [Authorize]
         [HttpDelete]
         [Route("api/Ledger")]
         public ActionResult DeleteLedger([FromBody]Ledger ledger) {

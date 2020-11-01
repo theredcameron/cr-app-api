@@ -24,5 +24,8 @@ namespace api.Models {
 
         [Required]
         public string LastName {get;set;}
+
+        [Required]
+        public bool Active {get;set;}
     }
 }

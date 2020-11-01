@@ -19,21 +19,6 @@ namespace api.Controllers
         {
             _logger = logger;
             _context = context;
-
-            //Add test user
-            var users = _context.Users.Select(x => x.UserName == "testuser");
-            if(users.Count() <= 0) {
-                _context.Users.Add(new User{
-                    UserName = "testuser",
-                    Password = "12345",
-                    FirstName = "test",
-                    LastName = "user",
-                    CreatedDate = DateTime.Now
-                });
-
-                _context.SaveChanges();
-            }
-            
         }
 
         // GET: api/Medicine
@@ -53,6 +38,7 @@ namespace api.Controllers
         }
 
         // GET: api/Medicine/5
+        [Authorize]
         [HttpGet]
         [Route("api/Medicine/{id}")]
         public ActionResult GetWithId(long id) {
@@ -67,6 +53,7 @@ namespace api.Controllers
         }
 
         // POST: api/Medicine
+        [Authorize]
         [HttpPost]
         [Route("api/Medicine")]
         public ActionResult AlterMedicine([FromBody]Medicine medicine) {
@@ -84,6 +71,7 @@ namespace api.Controllers
         }
 
         // DELETE: api/Medicine
+        [Authorize]
         [HttpDelete]
         [Route("api/Medicine")]
         public ActionResult DeleteMedicine([FromBody]Medicine medicine) {

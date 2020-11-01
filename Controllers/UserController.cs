@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -26,6 +27,20 @@ namespace api.Controllers {
             _logger = logger;
             _context = context;
             _config = config;
+
+            //Add test user
+            var users = _context.Users.Select(x => x.UserName == "testuser");
+            if(users.Count() <= 0) {
+                _context.Users.Add(new User{
+                    UserName = "testuser",
+                    Password = "12345",
+                    FirstName = "test",
+                    LastName = "user",
+                    CreatedDate = DateTime.Now
+                });
+
+                _context.SaveChanges();
+            }
         }
 
         [HttpPost]
@@ -58,6 +73,84 @@ namespace api.Controllers {
                 var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
 
                 return Ok(new {token = jwt_token} );
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET: api/User
+        [HttpGet]
+        [Authorize]
+        [Route("api/User")]
+        public ActionResult GetAllUsers() {
+            try {
+                // Iterate through users to omit their passwords
+                var users = new List<User>();
+                foreach(var user in _context.Users) {
+                    var fullUser = new User{
+                        UserId = user.UserId,
+                        UserName = user.UserName,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        CreatedDate = user.CreatedDate,
+                        Active = user.Active
+                    };
+                    users.Add(fullUser);
+                }
+                return Ok(users);
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET: api/User/{id}
+        [HttpGet]
+        [Authorize]
+        [Route("api/User/{id}")]
+        public ActionResult GetUserById(long id) {
+            try {
+                return Ok(_context.Users.Find(id));
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET: api/User
+        [HttpPost]
+        [Authorize]
+        [Route("api/User")]
+        public ActionResult AlterUser([FromBody]User user) {
+            try {
+                if(user.UserId > 0) {
+                    user = UpdateUser(user);
+                } else {
+                    user = CreateNewUser(user);
+                }
+                _context.SaveChanges();
+                return Ok(user);
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private User CreateNewUser(User user) {
+            user.CreatedDate = DateTime.Now;
+            _context.Users.Add(user);
+            return user;
+        }
+
+        private User UpdateUser(User user) {
+            _context.Users.Update(user);
+            return user;
+        }
+
+        // GET: api/User/{id}
+        [HttpDelete]
+        [Authorize]
+        [Route("api/User/{id}")]
+        public ActionResult DeleteUser(long id) {
+            try {
+                return Ok(_context.Users.Remove(_context.Users.Find(id)));
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
