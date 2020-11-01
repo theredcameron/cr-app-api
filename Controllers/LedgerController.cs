@@ -74,11 +74,10 @@ namespace api.Controllers
         [Route("api/Ledger")]
         public ActionResult AlterLedger([FromBody]Ledger ledger) {
             try {
-                if(ledger.Id > 0){
-                    _context.Ledgers.Update(ledger);
-                } else {
-                    _context.Ledgers.Add(ledger);
+                if(ledger.Id <= 0) {
+                    return BadRequest("Cannot submit a ledger with an Id of 0");
                 }
+                _context.Ledgers.Update(ledger);
                 _context.SaveChanges();
                 return Ok();
             } catch (Exception ex) {

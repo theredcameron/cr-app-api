@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "e6ae0492-92d4-4583-b41b-d93b66efab90",
-		"name": "CR API",
+		"name": "CR API - Users",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"12345\"\n}",
+					"raw": "{\n    \"UserName\": \"testuser\",\n    \"Password\": \"12345\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,13 +40,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/api/User/Login",
+					"raw": "{{url}}/User/Login",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "5000",
 					"path": [
-						"api",
 						"User",
 						"Login"
 					]
@@ -158,7 +156,6 @@
 							"});",
 							"",
 							"pm.test(\"User should match the user in the database\", function() {",
-							"    console.log(user);",
 							"    pm.expect(user.UserId).to.equal(newUserId);",
 							"    pm.expect(user.UserName).to.equal(\"postmanuser\");",
 							"    pm.expect(user.Password).to.equal(\"54321\");",
@@ -240,7 +237,7 @@
 			"response": []
 		},
 		{
-			"name": "Check User Changes",
+			"name": "Confirm User Changes",
 			"event": [
 				{
 					"listen": "test",
@@ -382,12 +379,12 @@
 	],
 	"variable": [
 		{
-			"id": "b247ef41-40b9-49ef-855f-8da2f5cd29b2",
+			"id": "30e6d386-44e5-4402-a5e3-ccbbbeaa8b8a",
 			"key": "token",
 			"value": ""
 		},
 		{
-			"id": "be4087fd-2fd0-442a-9c52-3f561a78becd",
+			"id": "17197738-cf90-4ab4-be62-dc159436324f",
 			"key": "newUserId",
 			"value": ""
 		}

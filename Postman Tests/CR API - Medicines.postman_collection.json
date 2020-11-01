@@ -1,0 +1,462 @@
+{
+	"info": {
+		"_postman_id": "eb827bee-118d-411f-966e-56efa8d5cf1a",
+		"name": "CR API - Medicines",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a5a7d6f-5b9b-40f5-832d-b225a431f521",
+						"exec": [
+							"let responseData = pm.response.json();",
+							"pm.collectionVariables.set(\"token\", responseData.token);",
+							"",
+							"pm.test(\"Response code is 200\", function() {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/User/Login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"User",
+						"Login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Medicine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7a697f3-4f2c-4370-a34b-a201b6024bf4",
+						"exec": [
+							"let medicine = pm.response.json();",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Medicine should match the medicine in the database\", function() {",
+							"    pm.expect(medicine.Id).is.greaterThan(0);",
+							"    pm.expect(medicine.Name).to.equal(\"test medicine\");",
+							"    pm.expect(medicine.CurrentQuantity).to.equal(30);",
+							"});",
+							"",
+							"pm.collectionVariables.set(\"newMedicineId\", medicine.Id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"MedicineId\": 0,\n    \"Name\": \"test medicine\",\n    \"CurrentQuantity\": 30\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Medicine",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Prescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "977f36d9-410a-4288-8561-0e3455464df8",
+						"exec": [
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"MedicineId\": {{newMedicineId}},\n    \"Quantity\": -5,\n    \"Note\": \"test note\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Medicine/Prescription",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine",
+						"Prescription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Ledgers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "74ed3879-2816-46de-be15-3de1c0d1659f",
+						"exec": [
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"There is only one ledger\", function() {",
+							"    let ledger = pm.response.json();",
+							"    pm.expect(ledger.length).is.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Ledger",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Ledger"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get New Medicine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "139ac0b1-8534-4ec3-8b6b-04ad69417d95",
+						"exec": [
+							"let medicine = pm.response.json();",
+							"let newMedicineId = pm.collectionVariables.get(\"newMedicineId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Medicine should match the medicine in the database\", function() {",
+							"    pm.expect(medicine.Id).to.equal(newMedicineId);",
+							"    pm.expect(medicine.Name).to.equal(\"test medicine\");",
+							"    pm.expect(medicine.CurrentQuantity).to.equal(30);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Medicine/{{newMedicineId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine",
+						"{{newMedicineId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Medicine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef3182da-80c4-407c-8e56-d67ad0df470a",
+						"exec": [
+							"let medicine = pm.response.json();",
+							"let newMedicineId = pm.collectionVariables.get(\"newMedicineId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Medicine should match the medicine in the database\", function() {",
+							"    pm.expect(medicine.Id).to.equal(newMedicineId);",
+							"    pm.expect(medicine.Name).to.equal(\"test medicine changed\");",
+							"    pm.expect(medicine.CurrentQuantity).to.equal(10);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"MedicineId\": {{newMedicineId}},\n    \"Name\": \"test medicine changed\",\n    \"CurrentQuantity\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/Medicine",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Medicine Changes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "43f60109-eb5d-4f7f-ad0a-04fa1bb36246",
+						"exec": [
+							"let medicine = pm.response.json();",
+							"let newMedicineId = pm.collectionVariables.get(\"newMedicineId\");",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Medicine should match the medicine in the database\", function() {",
+							"    pm.expect(medicine.Id).to.equal(newMedicineId);",
+							"    pm.expect(medicine.Name).to.equal(\"test medicine changed\");",
+							"    pm.expect(medicine.CurrentQuantity).to.equal(10);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Medicine/{{newMedicineId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine",
+						"{{newMedicineId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm New Prescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3d8ebcee-c9c7-4d01-8b8a-f9f1eebcfba7",
+						"exec": [
+							"let ledgers = pm.response.json();",
+							"",
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});",
+							"",
+							"pm.test(\"There should be one ledger\", function() {",
+							"    pm.expect(ledgers.length).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Ledger/Medicine/{{newMedicineId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Ledger",
+						"Medicine",
+						"{{newMedicineId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Medicine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cc101f9d-5d07-4d29-a3a1-c91e49230f80",
+						"exec": [
+							"pm.test(\"Response code should be 200\", function() {",
+							"    pm.expect(pm.response.code).is.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Medicine/{{newMedicineId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine",
+						"{{newMedicineId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Medicine Deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f28b96a-e824-44cf-92af-084fa8a84e1b",
+						"exec": [
+							"pm.test(\"Response code should be 404\", function() {",
+							"    pm.expect(pm.response.code).is.equal(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/Medicine/{{newMedicineId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Medicine",
+						"{{newMedicineId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a12d9fb7-efe0-47c1-9085-111fb2da65ef",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "99abbf60-9450-4f53-a108-9771a1c693c0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "72b96987-7638-4d8a-8ed6-4bec17741bf1",
+			"key": "token",
+			"value": ""
+		},
+		{
+			"id": "873f4134-827f-4f80-ad8d-0508c2a63201",
+			"key": "newMedicineId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -65,13 +65,14 @@ namespace api.Controllers
         [Route("api/Medicine")]
         public ActionResult AlterMedicine([FromBody]MedicineContract medicine) {
             try{
+                Medicine newMedicine;
                 if(medicine.Id > 0) {
-                    UpdateMedicine(medicine);
+                    newMedicine = UpdateMedicine(medicine);
                 } else {
-                    AddMedicine(medicine);
+                    newMedicine = AddMedicine(medicine);
                 }
                 _context.SaveChanges();
-                return Ok(medicine);
+                return Ok(newMedicine);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             } 
@@ -91,6 +92,7 @@ namespace api.Controllers
             var medicine = _context.Medicines.Find(medContract.Id);
             medicine.Name = medContract.Name;
             medicine.CurrentQuantity = medContract.CurrentQuantity;
+            _context.Medicines.Update(medicine);
             return medicine;
         }
 
@@ -118,7 +120,7 @@ namespace api.Controllers
                 _context.Ledgers.Add(ledger);
                 _context.SaveChanges();
                 
-                return Ok();
+                return Ok(ledger);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
