@@ -69,14 +69,14 @@
 							"});",
 							"",
 							"pm.test(\"User should match the user in the database\", function() {",
-							"    pm.expect(user.userName).to.equal(\"postmanuser\");",
-							"    pm.expect(user.password).to.equal(\"54321\");",
-							"    pm.expect(user.firstName).to.equal(\"Postman\");",
-							"    pm.expect(user.lastName).to.equal(\"User\");",
-							"    pm.expect(user.active).to.equal(true);",
+							"    pm.expect(user.UserName).to.equal(\"postmanuser\");",
+							"    pm.expect(user.Password).to.equal(\"54321\");",
+							"    pm.expect(user.FirstName).to.equal(\"Postman\");",
+							"    pm.expect(user.LastName).to.equal(\"User\");",
+							"    pm.expect(user.Active).to.equal(true);",
 							"});",
 							"",
-							"pm.collectionVariables.set(\"newUserId\", user.userId);"
+							"pm.collectionVariables.set(\"newUserId\", user.UserId);"
 						],
 						"type": "text/javascript"
 					}
@@ -121,8 +121,6 @@
 							"pm.test(\"There are only two users\", function() {",
 							"    let user = pm.response.json();",
 							"    pm.expect(user.length).is.equal(2);",
-							"    ",
-							"    pm.collectionVariables.set(\"newUserId\", user[1].userId);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -161,12 +159,12 @@
 							"",
 							"pm.test(\"User should match the user in the database\", function() {",
 							"    console.log(user);",
-							"    pm.expect(user.userId).to.equal(newUserId);",
-							"    pm.expect(user.userName).to.equal(\"postmanuser\");",
-							"    pm.expect(user.password).to.equal(\"54321\");",
-							"    pm.expect(user.firstName).to.equal(\"Postman\");",
-							"    pm.expect(user.lastName).to.equal(\"User\");",
-							"    pm.expect(user.active).to.equal(true);",
+							"    pm.expect(user.UserId).to.equal(newUserId);",
+							"    pm.expect(user.UserName).to.equal(\"postmanuser\");",
+							"    pm.expect(user.Password).to.equal(\"54321\");",
+							"    pm.expect(user.FirstName).to.equal(\"Postman\");",
+							"    pm.expect(user.LastName).to.equal(\"User\");",
+							"    pm.expect(user.Active).to.equal(true);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -205,12 +203,12 @@
 							"});",
 							"",
 							"pm.test(\"User should match the user in the database\", function() {",
-							"    pm.expect(user.userId).to.equal(newUserId);",
-							"    pm.expect(user.userName).to.equal(\"postmanuserchange\");",
-							"    pm.expect(user.password).to.equal(\"543210\");",
-							"    pm.expect(user.firstName).to.equal(\"Postman Change\");",
-							"    pm.expect(user.lastName).to.equal(\"User Change\");",
-							"    pm.expect(user.active).to.equal(false);",
+							"    pm.expect(user.UserId).to.equal(newUserId);",
+							"    pm.expect(user.UserName).to.equal(\"postmanuserchange\");",
+							"    pm.expect(user.Password).to.equal(\"543210\");",
+							"    pm.expect(user.FirstName).to.equal(\"Postman Change\");",
+							"    pm.expect(user.LastName).to.equal(\"User Change\");",
+							"    pm.expect(user.Active).to.equal(false);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -257,12 +255,12 @@
 							"});",
 							"",
 							"pm.test(\"User should match the user in the database\", function() {",
-							"    pm.expect(user.userId).to.equal(newUserId);",
-							"    pm.expect(user.userName).to.equal(\"postmanuserchange\");",
-							"    pm.expect(user.password).to.equal(\"543210\");",
-							"    pm.expect(user.firstName).to.equal(\"Postman Change\");",
-							"    pm.expect(user.lastName).to.equal(\"User Change\");",
-							"    pm.expect(user.active).to.equal(false);",
+							"    pm.expect(user.UserId).to.equal(newUserId);",
+							"    pm.expect(user.UserName).to.equal(\"postmanuserchange\");",
+							"    pm.expect(user.Password).to.equal(\"543210\");",
+							"    pm.expect(user.FirstName).to.equal(\"Postman Change\");",
+							"    pm.expect(user.LastName).to.equal(\"User Change\");",
+							"    pm.expect(user.Active).to.equal(false);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -384,12 +382,12 @@
 	],
 	"variable": [
 		{
-			"id": "169d5d1f-b572-4952-84ec-647b932ed747",
+			"id": "b247ef41-40b9-49ef-855f-8da2f5cd29b2",
 			"key": "token",
 			"value": ""
 		},
 		{
-			"id": "8f5ef1b6-4193-4847-891c-04a03c71ebdd",
+			"id": "be4087fd-2fd0-442a-9c52-3f561a78becd",
 			"key": "newUserId",
 			"value": ""
 		}

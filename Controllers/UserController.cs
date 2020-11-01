@@ -109,7 +109,11 @@ namespace api.Controllers {
         [Route("api/User/{id}")]
         public ActionResult GetUserById(long id) {
             try {
-                return Ok(_context.Users.Find(id));
+                var user = _context.Users.Find(id);
+                if(user == null) {
+                    return NotFound();
+                }
+                return Ok(user);
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
@@ -150,7 +154,9 @@ namespace api.Controllers {
         [Route("api/User/{id}")]
         public ActionResult DeleteUser(long id) {
             try {
-                return Ok(_context.Users.Remove(_context.Users.Find(id)));
+                _context.Users.Remove(_context.Users.Find(id));
+                _context.SaveChanges();
+                return Ok();
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }
