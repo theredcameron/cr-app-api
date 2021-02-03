@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
@@ -36,5 +37,7 @@ namespace api.Models {
         [Required]
         [JsonPropertyName("Active")]
         public bool Active {get;set;}
+        [ForeignKey("PrivilegeId")]
+        public IList<UserPrivilege> UserPrivileges {get;set;}
     }
 }

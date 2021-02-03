@@ -17,6 +17,7 @@ namespace api
 {
     public class Startup
     {
+        private readonly string MedAppOrigins = "_medAppOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

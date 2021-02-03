@@ -16,6 +16,8 @@ namespace api.Contexts {
             modelBuilder.Entity<Medicine>().ToTable("Medicine");
             modelBuilder.Entity<Ledger>().ToTable("Ledger");
             modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Privilege>().ToTable("Privilege");
+            modelBuilder.Entity<UserPrivilege>().HasKey(up => new {up.PrivilegeId, up.UserId});
         }
     }
 }
