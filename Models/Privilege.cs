@@ -15,6 +15,5 @@ namespace api.Models {
         [JsonPropertyName("Name")]
         [MaxLength(500)]
         public string Name {get;set;}
-        public IList<UserPrivilege> UserPrivileges {get;set;}
     }
 }

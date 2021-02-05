@@ -11,6 +11,8 @@ namespace api.Contexts {
         public DbSet<Medicine> Medicines {get;set;}
         public DbSet<Ledger> Ledgers {get;set;}
         public DbSet<User> Users {get;set;}
+        public DbSet<Privilege> Privileges {get;set;}
+        public DbSet<UserPrivilege> UserPrivileges {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Medicine>().ToTable("Medicine");

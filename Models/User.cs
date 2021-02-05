@@ -37,7 +37,5 @@ namespace api.Models {
         [Required]
         [JsonPropertyName("Active")]
         public bool Active {get;set;}
-        [ForeignKey("PrivilegeId")]
-        public IList<UserPrivilege> UserPrivileges {get;set;}
     }
 }

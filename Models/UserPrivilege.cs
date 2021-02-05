@@ -6,11 +6,11 @@ namespace api.Models {
     public class UserPrivilege {
         [Column("UserId")]
         [JsonPropertyName("UserId")]
+        [ForeignKey("User")]
         public long UserId {get;set;}
-        public User User {get;set;}
         [Column("PrivilegeId")]
         [JsonPropertyName("PrivilegeId")]
+        [ForeignKey("Privilege")]
         public long PrivilegeId {get;set;}
-        public Privilege Privilege {get;set;}
     }
 }
