@@ -13,7 +13,11 @@ namespace api.Models {
 
         [Required]
         [JsonPropertyName("Name")]
-        [MaxLength(500)]
+        [MaxLength(100)]
         public string Name {get;set;}
+
+        [JsonPropertyName("Description")]
+        [MaxLength(500)]
+        public string Description {get;set;}
     }
 }

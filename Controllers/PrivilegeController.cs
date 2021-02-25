@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using api.Contexts;
 using api.Contracts;
 using api.Models;
+using api.Attributes;
 
 namespace api.Controllers {
     [ApiController]
@@ -26,10 +27,12 @@ namespace api.Controllers {
             _context = context;
             _config = config;
 
-            var privileges = _context.Privileges.Select(x => x.Name == "test privilege");
+            var privileges = _context.Privileges.Select(x => x.Name == "TestPriv");
+            
             if(privileges.Count() <= 0) {
                 _context.Privileges.Add(new Privilege{
-                    Name = "test privilege"
+                    Name = "TestPriv",
+                    Description = "test privilege"
                 });
 
                 _context.SaveChanges();
@@ -49,6 +52,7 @@ namespace api.Controllers {
         [HttpGet]
         [Authorize]
         [Route("api/Privilege")]
+        [Privilege("TestPriv")]
         public ActionResult GetAllPrivileges() {
             try {
                 return Ok(_context.Privileges);
@@ -60,6 +64,7 @@ namespace api.Controllers {
         [HttpGet]
         [Authorize]
         [Route("api/UserPrivilege")]
+        [Privilege("TestPriv")]
         public ActionResult GetAllUserPrivileges() {
             try {
                 return Ok(_context.UserPrivileges);

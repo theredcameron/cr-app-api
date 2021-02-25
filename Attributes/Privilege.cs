@@ -11,7 +11,7 @@ namespace api.Attributes {
     {
         public PrivilegeAttribute(string claimValue) : base(typeof(PrivilegeFilter))
         {
-            Arguments = new object[] {new Claim("Privilege", claimValue };
+            Arguments = new object[] {new Claim("Privilege", claimValue)};
         }
     }
 
@@ -29,7 +29,7 @@ namespace api.Attributes {
             var hasClaim = context.HttpContext.User.Claims.Any(c => c.Type == _claim.Type && c.Value == _claim.Value);
             if (!hasClaim)
             {
-                context.Result = new ForbidResult();
+                context.Result = new UnauthorizedResult();
             }
         }
     }

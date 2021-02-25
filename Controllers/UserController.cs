@@ -52,7 +52,13 @@ namespace api.Controllers {
                     return BadRequest("Invalid Credentials");
                 }
 
-                var privileges = _context.UserPrivileges.Where(x => x.UserId == user.UserId);
+                //var privileges = _context.UserPrivileges.Where(x => x.UserId == user.UserId);
+
+                var privileges = from privilege in _context.Privileges
+                                    join userPrivilege in _context.UserPrivileges
+                                    on privilege.Id equals userPrivilege.PrivilegeId
+                                    where userPrivilege.UserId == user.UserId
+                                    select privilege;
 
                 var key = _config.Value.Key;
                 var issuer = _config.Value.Issuer;
@@ -66,7 +72,7 @@ namespace api.Controllers {
                 claims.Add(new Claim("UserName", user.UserName));
 
                 foreach(var privilege in privileges){
-                    claims.Add(new Claim("Privilege", privilege.PrivilegeId.ToString()));
+                    claims.Add(new Claim("Privilege", privilege.Name));
                 }
 
                 var token = new JwtSecurityToken(issuer,
