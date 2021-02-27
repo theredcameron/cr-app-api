@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 
 using api.Models;
+using api.Utilities;
 
 namespace api.Contexts {
     public  class MedicineDbContext : DbContext {
@@ -21,7 +22,7 @@ namespace api.Contexts {
             modelBuilder.Entity<User>().HasData(new User{
                 UserId = 1,
                 UserName = "admin",
-                Password = "12345",
+                Password = Crypto.Encrypt("12345"),
                 FirstName = "admin",
                 LastName = "user",
                 CreatedDate = DateTime.Now
@@ -35,8 +36,14 @@ namespace api.Contexts {
 
             modelBuilder.Entity<Privilege>().HasData(new Privilege{
                 Id = 2,
-                Name = "Secondary",
-                Description = "Secondary"
+                Name = "View",
+                Description = "View Medicines and Ledgers"
+            });
+
+            modelBuilder.Entity<Privilege>().HasData(new Privilege{
+                Id = 3,
+                Name = "Edit",
+                Description = "Create/Edit Medicines and Ledgers"
             });
 
             modelBuilder.Entity<UserPrivilege>(e => {

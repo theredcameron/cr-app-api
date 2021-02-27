@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using api.Models;
 using api.Contexts;
 using api.Contracts;
+using api.Utilities;
 
 namespace api.Controllers {
     [ApiController]
@@ -42,7 +43,7 @@ namespace api.Controllers {
 
                 var user = users.Single();
                 
-                if(user == null || user.Password != userContract.Password) {
+                if(user == null || Crypto.Decrypt(user.Password) != userContract.Password) {
                     return BadRequest("Invalid Credentials");
                 }
 
