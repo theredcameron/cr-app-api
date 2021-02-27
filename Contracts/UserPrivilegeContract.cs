@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 namespace api.Contracts {
-    public class UserPrivilegeController {
+    public class UserPrivilegeContract {
         [JsonPropertyName("UserId")]
         public long UserId {get;set;}
         [JsonPropertyName("PrivilegeId")]

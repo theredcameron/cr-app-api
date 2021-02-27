@@ -1,6 +1,7 @@
 using System.Web.Mvc;
 using System.Web;
 using System.Security.Claims;
+using System;
 using System.Linq;
 
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace api.Attributes {
     public class PrivilegeAttribute : TypeFilterAttribute
     {
-        public PrivilegeAttribute(string claimValue) : base(typeof(PrivilegeFilter))
+        public PrivilegeAttribute(params string[] claimValues) : base(typeof(PrivilegeFilter))
         {
-            Arguments = new object[] {new Claim("Privilege", claimValue)};
+            Arguments = new object[] {new Claim("Privilege", string.Join(',', claimValues))};
         }
     }
 
@@ -26,9 +27,16 @@ namespace api.Attributes {
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var hasClaim = context.HttpContext.User.Claims.Any(c => c.Type == _claim.Type && c.Value == _claim.Value);
-            if (!hasClaim)
-            {
+            var privileges = _claim.Value.Split(',');
+            var authorized = false;
+            foreach(var privilege in privileges){
+                var hasClaim = context.HttpContext.User.Claims.Any(c => c.Type == _claim.Type && c.Value == privilege);
+                if(hasClaim){
+                    authorized = true;
+                    break;
+                }
+            }
+            if(!authorized){
                 context.Result = new UnauthorizedResult();
             }
         }

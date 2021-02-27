@@ -26,33 +26,25 @@ namespace api.Controllers {
             _logger = logger;
             _context = context;
             _config = config;
-
-            //Add test user
-            var users = _context.Users.Select(x => x.UserName == "testuser");
-            if(users.Count() <= 0) {
-                _context.Users.Add(new User{
-                    UserName = "testuser",
-                    Password = "12345",
-                    FirstName = "test",
-                    LastName = "user",
-                    CreatedDate = DateTime.Now
-                });
-
-                _context.SaveChanges();
-            }
         }
 
         [HttpPost]
         [Route("api/User/Login")]
         public ActionResult Login([FromBody]UserContract userContract) {
             try {
-                var user = _context.Users.Single(x => x.UserName == userContract.UserName);
-
-                if(user == null || user.Password != userContract.Password) {
+                //var user = _context.Users.Single(x => x.UserName == userContract.UserName);
+                var users = from innerUser in _context.Users
+                            where innerUser.UserName == userContract.UserName
+                            select innerUser;
+                if(users.Count() <= 0) {
                     return BadRequest("Invalid Credentials");
                 }
 
-                //var privileges = _context.UserPrivileges.Where(x => x.UserId == user.UserId);
+                var user = users.Single();
+                
+                if(user == null || user.Password != userContract.Password) {
+                    return BadRequest("Invalid Credentials");
+                }
 
                 var privileges = from privilege in _context.Privileges
                                     join userPrivilege in _context.UserPrivileges

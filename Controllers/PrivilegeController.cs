@@ -26,33 +26,12 @@ namespace api.Controllers {
             _logger = logger;
             _context = context;
             _config = config;
-
-            var privileges = _context.Privileges.Select(x => x.Name == "TestPriv");
-            
-            if(privileges.Count() <= 0) {
-                _context.Privileges.Add(new Privilege{
-                    Name = "TestPriv",
-                    Description = "test privilege"
-                });
-
-                _context.SaveChanges();
-            }
-
-            var userPrivilege = _context.UserPrivileges.Select(x => x.UserId == 1 && x.PrivilegeId == 1);
-            if(userPrivilege.Count() <= 0) {
-                _context.UserPrivileges.Add(new UserPrivilege{
-                    UserId = 1,
-                    PrivilegeId = 1
-                });
-
-                _context.SaveChanges();
-            }
         }
 
         [HttpGet]
         [Authorize]
         [Route("api/Privilege")]
-        [Privilege("TestPriv")]
+        [Privilege("Secondary")]
         public ActionResult GetAllPrivileges() {
             try {
                 return Ok(_context.Privileges);
@@ -63,11 +42,36 @@ namespace api.Controllers {
 
         [HttpGet]
         [Authorize]
-        [Route("api/UserPrivilege")]
-        [Privilege("TestPriv")]
-        public ActionResult GetAllUserPrivileges() {
+        [Route("api/UserPrivilege/{userId}")]
+        [Privilege("Admin", "Secondary")]
+        public ActionResult GetAllUserPrivileges(long userId) {
             try {
-                return Ok(_context.UserPrivileges);
+                return Ok(_context.UserPrivileges.Where(x => x.UserId == userId));
+            } catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("api/UserPrivilege")]
+        [Privilege("Secondary")]
+        public ActionResult UpdateUserPrivilege([FromBody] UserPrivilegeUpdateContract privilegeUpdates) {
+            try {
+                    _context.UserPrivileges.RemoveRange(from privilege in _context.UserPrivileges
+                                    where privilege.UserId == privilegeUpdates.UserId
+                                    select privilege);
+
+                    foreach(var update in privilegeUpdates.PrivilegeIds){
+                        _context.UserPrivileges.Add(new UserPrivilege{
+                            UserId = privilegeUpdates.UserId,
+                            PrivilegeId = update
+                        });
+                    }
+
+                    _context.SaveChanges();
+
+                return Ok();
             } catch (Exception ex) {
                 return BadRequest(ex.Message);
             }

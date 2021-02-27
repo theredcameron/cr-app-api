@@ -17,9 +17,35 @@ namespace api.Contexts {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Medicine>().ToTable("Medicine");
             modelBuilder.Entity<Ledger>().ToTable("Ledger");
-            modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<Privilege>().ToTable("Privilege");
-            modelBuilder.Entity<UserPrivilege>().HasKey(up => new {up.PrivilegeId, up.UserId});
+
+            modelBuilder.Entity<User>().HasData(new User{
+                UserId = 1,
+                UserName = "admin",
+                Password = "12345",
+                FirstName = "admin",
+                LastName = "user",
+                CreatedDate = DateTime.Now
+            });
+
+            modelBuilder.Entity<Privilege>().HasData(new Privilege{
+                Id = 1,
+                Name = "Admin",
+                Description = "Administrator"
+            });
+
+            modelBuilder.Entity<Privilege>().HasData(new Privilege{
+                Id = 2,
+                Name = "Secondary",
+                Description = "Secondary"
+            });
+
+            modelBuilder.Entity<UserPrivilege>(e => {
+                e.HasKey(l => new {l.PrivilegeId, l.UserId});
+                e.HasData(new UserPrivilege{
+                    UserId = 1,
+                    PrivilegeId = 2
+                });
+            });
         }
     }
 }
